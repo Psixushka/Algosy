@@ -502,78 +502,124 @@ struct TipList
 };
 
 
-void FillArray(int* const arr, const int size)
+class dynamic_array
 {
-    for (int i = 0; i < size; i++)
+private:
+    int size;
+    int* array;
+
+public:
+    dynamic_array()
     {
-        arr[i] = rand() % 199 - 99;
-    }
-}
-
-
-void ShowArray(const int* const arr, const int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
-}
-
-void ShowElem(const int* const arr, const int size)
-{
-    cout << "Введите индекс элемента" << endl;
-    int e;
-    cin >> e;
-    cout << arr[e] << endl;
-}
-
-void pop_back_elem(int*& arr, int& size)
-{
-    cout << "Введите номер элемента" << endl;
-    int pi;
-    cin >> pi;
-    for (int i = pi; i < size - 1; i++)
-    {
-        arr[i] = arr[i + 1];
-    }
-    size--;
-
-
-}
-
-
-void bubbleSort(int*& arr, int size) // создаем пузырьковую сортировку массива
-{  
-    for (int i = 0; size != 1; size--)
-        for (int i = 0; i < size - 1; i++) {
-            if (arr[i] > arr[i + 1])
-                swap(arr[i], arr[i + 1]);
+        size = 0;
+        array = NULL;
+        cout << "Введите количество элементов" << endl;
+        cin >> size;
+        array = new int[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = rand() % 199 - 99;
         }
-}
-
-
-void NewElem(int*& arr, int& size)
-{   
-    cout << "Введите элемент" << endl;
-    int newSize = size + 1;
-    int value;
-    cin >> value;
-    int* newArray = new int[size];
-    for (int i = 0; i < size; i++)
-    {
-        newArray[i] = arr[i];
+    }
+    ~dynamic_array() {
+        delete[] array;
+        array = nullptr;
     }
 
-    newArray[size] = value;
+    void show()
+    {
+        for (int i = 0; i < size; i++) {
+            cout << array[i] << " ";
+        }
+        cout << endl;
+    }
 
-    delete[] arr; // Удаляем старый массив
+    void insertArray()
+    {
+        show();
+        cout << endl;
+        int Index, Data;
+        int* array2 = new int[size++];
 
-    arr = newArray; // Присваиваем указателю на старый массив адрес нового массива
+        cout << "Введите индекс для вставки" << endl;
+        cin >> Index;
+        cout << "Введите значение для вставки" << endl;
+        cin >> Data;
+        for (int i = 0; i < size; i++)
+        {
+            if (i < Index)
+            {
+                array2[i] = array[i];
+            }
 
-    size = newSize;
+            if (i >= Index)
+            {
+                array2[i + 1] = array[i];
 
-}
+            }
+            if (i == Index) {
+
+                array2[i] = Data;
+            }
+
+        }
+
+        for (int i = 0; i < size; i++)
+        {
+            array[i] = array2[i];
+        }
+        for (int i = 0; i < size; i++)
+        {
+            cout << array[i] << " ";
+        }
+        cout << endl;
+    }
+
+    void deleteArray()
+    {
+        show();
+        cout << "Введите индекс элемента" << endl;
+        int index;
+        cin >> index;
+        for (int i = index; i < size - 1; i++)
+        {
+            array[i] = array[i + 1];
+        }
+        size--;
+
+        for (int i = 0; i < size; i++)
+        {
+            cout << array[i] << " ";
+        }
+        cout << endl;
+    }
+    int GetElemIndex(int Index, int Data)
+    {
+
+        for (int i = 0; i < size; i++)
+        {
+            if (i == Index)
+            {
+                Data = array[i];
+            }
+        }
+
+        return Data;
+    }
+    int GetElemData(int Index, int Data)
+    {
+
+        for (int i = 0; i < size; i++)
+        {
+            if (array[i] == Data)
+            {
+                Index = i;
+            }
+
+        }
+
+        return Index;
+    }
+};
 
 int main()
 {
@@ -770,52 +816,68 @@ int main()
             }while (switcher != 5);
             break;
         case 3:
-            cout << "Введите количество элементов в масиве" << endl;
-            int size;
-            int index1, index2;
-            cin >> size;
-            int* arr = new int[size];
-            FillArray(arr, size);
-            ShowArray(arr, size);
-            cout << "Выберите действие:\n" \
-                "1. Отсортировать матрицу\n" \
-                "2. Вывести элемент по индексу\n" \
-                "3. Удалить элемент по индексу\n" \
-                "4. Добавить элемент в массив\n" \
-                "5. Поменять два элемента по индексу\n" \
-                "6. Вывести массив\n";
-            do
-            {
-                cout << "Выполнить пункт: ";
-                cin >> ch;
-                switch (ch)
+            cout << "Поехали" << endl;
+            dynamic_array my_array;
+            int e;
+            do {
+                cout << "Выберите действие: " << endl;
+                cout << "1) Вставка" << endl;
+                cout << "2) Получение значения по индексу " << endl;
+                cout << "3) Получение значения по значению элемента " << endl;
+                cout << "4) Удаление элемента " << endl;
+                cout << "5) Выход " << endl;
+                cin >> e;
+                switch (e)
                 {
                 case 1:
-                    bubbleSort(arr, size);
-                    ShowArray(arr, size);
-                    break;
-                case 2:
-                    ShowElem(arr, size);
-                    break;
-                case 3:
-                    pop_back_elem(arr, size);
-                    ShowArray(arr, size);
-                    break;
-                case 4:
-                    NewElem(arr, size);
-                    ShowArray(arr, size);
-                    break;
-                case 5:
-                    cout << "Введите два индекса для перестановки" << endl;
-                    cin >> index1 >> index2;
-                    swap(arr[index1], arr[index2]);
-                    ShowArray(arr, size);
-                case 6:
-                    ShowArray(arr, size);
+                {
+                    my_array.insertArray();
+
                 }
-            } 
-            while (ch != 8);
-            break;
+                break;
+                case 2:
+                {
+                    int Index, Data = 0;
+                    my_array.show();
+                    cout << "Введите индекс элемента котрый хотите получить " << endl;
+                    cin >> Index;
+
+                    Data = my_array.GetElemIndex(Index, Data);
+                    cout << endl << "Ваш элемент = " << Data << endl;
+
+                }
+                break;
+                case 3:
+                {
+                    int Index = -5, Data = 0;
+                    my_array.show();
+                    cout << "Введите элемент котрый хотите получить " << endl;
+                    cin >> Data;
+                    Index = my_array.GetElemData(Index, Data);
+                    if (Index != -5) {
+                        cout << endl << "Ваш элемент находится под номером " << Index + 1 << endl;
+                    }
+                    else
+                    {
+                        cout << "Элемент не найден!" << endl;
+                    }
+                }
+                break;
+                case 4:
+                {
+                    my_array.deleteArray();
+                }
+                break;
+                case 5:
+                {
+                    break;
+                }
+                break;
+                default:cout << "Ошибка! Повторите попытку" << endl;
+                    break;
+                }
+
+            } while (e != 5);
         }
     }while (choose != 4);
     return 0;
