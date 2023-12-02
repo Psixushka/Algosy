@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <stack>
+#include <queue>
 
 
 using namespace std;
@@ -486,6 +488,71 @@ public:
         }
     }
 
+    void preorderIterative() {
+        preorderIterative(root);
+        cout << "\n";
+    }
+
+    void preorderIterative(AVLNode* root)
+    {
+        if (root) {
+
+      
+            if (!(root->Left) && !(root->Right)) {
+                cout << root->key << endl;
+                return;
+            }
+
+  
+            vector<AVLNode*> list;
+            list.push_back(root);
+
+
+            AVLNode* L = root->Left;
+            while (L->Left) {
+                list.push_back(L);
+                L = L->Left;
+            }
+            queue<AVLNode*> q;
+            q.push(root);
+            while (!q.empty()) {
+                AVLNode* temp = q.front();
+            q.pop();
+            if (!(temp->Left) && !(temp->Right)) {
+                list.push_back(temp);
+            }
+            if (temp->Left) {
+                q.push(temp->Left);
+            }
+            if (temp->Right) {
+                q.push(temp->Right);
+            }
+        }
+
+   
+            vector<AVLNode*> list_r;
+            AVLNode* R = root->Right;
+            while (R->Right) {
+                list_r.push_back(R);
+                R = R->Right;
+            }
+
+         
+            reverse(list_r.begin(), list_r.end());
+
+         
+            list.insert(list.end(), list_r.begin(),
+                list_r.end());
+
+        
+            for (auto i : list) {
+                cout << i->key << " ";
+            }
+            cout << endl;
+            return;
+        }
+    }
+
     void BFS() {
         BFS(root);
         cout << "\n";
@@ -575,6 +642,8 @@ int main()
     cout << "\nПостфиксный обход дерева в глубину ";
     avl.DFSPostfix();
 
+    cout << "\nИтеративный обход границ:";
+    avl.preorderIterative();
 
     return 0;
 }
